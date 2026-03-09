@@ -25,4 +25,8 @@ public class RefreshToken {
     private Instant expiresAt;
 
     private boolean revoked;
+
+    public boolean isExpired() {
+        return expiresAt.isBefore(Instant.now());
+    }
 }

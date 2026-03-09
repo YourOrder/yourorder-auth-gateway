@@ -6,7 +6,6 @@ import jcn.yourorder.authgateway.auth.enitites.dtos.request.RegisterRequestDto;
 import jcn.yourorder.authgateway.auth.enitites.dtos.response.LoginResponseDto;
 import jcn.yourorder.authgateway.auth.enitites.dtos.response.RefreshResponseDto;
 import jcn.yourorder.authgateway.auth.enitites.dtos.response.RegisterResponseDto;
-import jcn.yourorder.authgateway.auth.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -15,21 +14,42 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
+    private final TokenService tokenService;
 
     public Mono<RegisterResponseDto> registerUser(RegisterRequestDto request) {
-
-        return Mono.empty();
+        return userService.register(request)
+                .flatMap(tokenService::generateTokens)
+                .map(tokens ->
+                        new RegisterResponseDto(
+                                tokens,
+                                "User successfully registered"
+                        )
+                );
     }
 
     public Mono<LoginResponseDto> loginUser(LoginRequestDto request) {
-        return Mono.empty();
+        return userService.login(request)
+                .flatMap(tokenService::generateTokens)
+                .map(tokens ->
+                        new LoginResponseDto(
+                                tokens,
+                                "User successfully authenticated"
+                        )
+                );
     }
 
     public Mono<RefreshResponseDto> refreshUserToken(RefreshRequestDto request) {
-        return Mono.empty();
+        return tokenService.refreshAccessToken(request.refreshToken())
+                .map(tokens ->
+                        new RefreshResponseDto(
+                                tokens,
+                                "Access token successfully refreshed"
+                        )
+                );
+    }
+
+    public Mono<Void> logoutUser(RefreshRequestDto request) {
+        return tokenService.logout(request.refreshToken());
     }
 }

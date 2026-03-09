@@ -25,7 +25,6 @@ public class AuthController {
 
     private final AuthService authService;
 
-
     @Operation(
             summary = "Register user",
             description = "Registration user and returns access + refresh tokens"
@@ -58,4 +57,16 @@ public class AuthController {
     ) {
         return authService.refreshUserToken(request);
     }
+
+    @Operation(
+            summary = "Logout user",
+            description = "Revokes current refresh token"
+    )
+    @PostMapping("/logout")
+    public Mono<Void> logoutUser(
+            @Valid @RequestBody RefreshRequestDto request
+    ) {
+        return authService.logoutUser(request);
+    }
 }
+
