@@ -1,0 +1,46 @@
+package jcn.yourorder.authgateway.security.config;
+
+import jcn.yourorder.authgateway.security.filter.JwtAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+
+@Configuration
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+
+        return http
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+
+                .authorizeExchange(exchanges -> exchanges
+
+                        // AUTH endpoints
+                        .pathMatchers("/auth/**").permitAll()
+
+                        // Swagger
+                        .pathMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
+
+                        // everything else
+                        .anyExchange().authenticated()
+                )
+
+                // JWT filter
+                .addFilterAt(jwtAuthenticationFilter,
+                        org.springframework.security.web.server.SecurityWebFiltersOrder.AUTHENTICATION)
+
+                .build();
+    }
+}

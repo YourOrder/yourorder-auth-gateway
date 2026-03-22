@@ -14,5 +14,4 @@ public record RegisterRequestDto(
 
         @NotBlank(message = "Password is required")
         String password
-) {
-}
+) {}
