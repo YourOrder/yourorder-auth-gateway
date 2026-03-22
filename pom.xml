@@ -14,7 +14,7 @@
     </parent>
 
     <groupId>jcn.yourorder</groupId>
-    <artifactId>auth-gateway</artifactId>
+    <artifactId>yourorder-auth-gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>auth-gateway</name>
 
