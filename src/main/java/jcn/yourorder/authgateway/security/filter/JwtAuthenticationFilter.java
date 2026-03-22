@@ -3,27 +3,23 @@ package jcn.yourorder.authgateway.security.filter;
 import jcn.yourorder.authgateway.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 @Component
-public class JwtAuthenticationFilter extends AuthenticationWebFilter {
+@RequiredArgsConstructor
+public class JwtAuthenticationFilter implements WebFilter {
 
     private final JwtTokenProvider jwtProvider;
 
-    public JwtAuthenticationFilter(ReactiveAuthenticationManager authenticationManager, JwtTokenProvider jwtProvider) {
-        super(authenticationManager);
-        this.jwtProvider = jwtProvider;
-    }
-
     @Override
     public Mono<Void> filter(ServerWebExchange exchange,
-                             org.springframework.web.server.WebFilterChain chain) {
+                             WebFilterChain chain) {
 
         String authHeader = exchange.getRequest()
                 .getHeaders()

@@ -4,10 +4,12 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jcn.yourorder.authgateway.auth.enitites.models.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -27,8 +29,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public Claims validateToken(String token) {
-
+    public Claims getClaims(String token) {
         return Jwts.parser()
                 .verifyWith(rsaKeyProvider.getPublicKey())
                 .build()
@@ -36,7 +37,17 @@ public class JwtTokenProvider {
                 .getPayload();
     }
 
-    public boolean isTokenValid(String token) {
-        return validateToken(token) == null;
+    public boolean validateToken(String token) {
+        try {
+            getClaims(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
+        String role = claims.get("role", String.class);
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
     }
 }

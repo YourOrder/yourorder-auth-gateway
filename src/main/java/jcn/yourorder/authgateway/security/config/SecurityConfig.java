@@ -4,6 +4,7 @@ import jcn.yourorder.authgateway.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
@@ -38,8 +39,7 @@ public class SecurityConfig {
                 )
 
                 // JWT filter
-                .addFilterAt(jwtAuthenticationFilter,
-                        org.springframework.security.web.server.SecurityWebFiltersOrder.AUTHENTICATION)
+                .addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
 
                 .build();
     }

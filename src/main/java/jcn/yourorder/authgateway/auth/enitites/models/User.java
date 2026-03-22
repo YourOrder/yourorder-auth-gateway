@@ -20,11 +20,11 @@ public class User {
     @Id
     private UUID id;
 
+    private UUID tenantID;
+
     private String username;
     private String email;
     private String password;
     private UserRole role;
-    // todo Наверное можно обойтись 1 айди
-    private String tenantId;
     private Instant createdAt;
 }
