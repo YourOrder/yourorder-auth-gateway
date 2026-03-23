@@ -21,12 +21,6 @@ public class JwtAuthenticationFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange,
                              WebFilterChain chain) {
-
-        System.out.println("JWT FILTER TRIGGERED");
-
-        System.out.println("PATH: " + exchange.getRequest().getPath());
-        System.out.println("METHOD: " + exchange.getRequest().getMethod());
-
         String authHeader = exchange.getRequest()
                 .getHeaders()
                 .getFirst(HttpHeaders.AUTHORIZATION);
@@ -38,7 +32,6 @@ public class JwtAuthenticationFilter implements WebFilter {
         String token = authHeader.substring(7);
 
         if (!jwtProvider.validateToken(token)) {
-            System.out.println("VALID: " + jwtProvider.validateToken(token));
             return chain.filter(exchange);
         }
 
@@ -55,15 +48,11 @@ public class JwtAuthenticationFilter implements WebFilter {
                 .request(request)
                 .build();
 
-
-
         var auth = new UsernamePasswordAuthenticationToken(
                 claims.getSubject(),
                 null,
                 jwtProvider.getAuthorities(claims)
         );
-
-        System.out.println("AUTH: " + auth);
 
         return chain.filter(newExchange)
                 .contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
