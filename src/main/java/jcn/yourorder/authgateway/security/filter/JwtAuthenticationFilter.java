@@ -3,6 +3,7 @@ package jcn.yourorder.authgateway.security.filter;
 import jcn.yourorder.authgateway.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,11 @@ public class JwtAuthenticationFilter implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange,
                              WebFilterChain chain) {
 
+        System.out.println("JWT FILTER TRIGGERED");
+
+        System.out.println("PATH: " + exchange.getRequest().getPath());
+        System.out.println("METHOD: " + exchange.getRequest().getMethod());
+
         String authHeader = exchange.getRequest()
                 .getHeaders()
                 .getFirst(HttpHeaders.AUTHORIZATION);
@@ -32,10 +38,24 @@ public class JwtAuthenticationFilter implements WebFilter {
         String token = authHeader.substring(7);
 
         if (!jwtProvider.validateToken(token)) {
+            System.out.println("VALID: " + jwtProvider.validateToken(token));
             return chain.filter(exchange);
         }
 
         var claims = jwtProvider.getClaims(token);
+
+        ServerHttpRequest request = exchange.getRequest().mutate()
+                .header("X-User-Id", claims.getSubject())
+                .header("X-Username", claims.get("username", String.class))
+                .header("X-User-Role", claims.get("role", String.class))
+                .header("X-Tenant-Id", claims.get("tenantId", String.class))
+                .build();
+
+        ServerWebExchange newExchange = exchange.mutate()
+                .request(request)
+                .build();
+
+
 
         var auth = new UsernamePasswordAuthenticationToken(
                 claims.getSubject(),
@@ -43,7 +63,9 @@ public class JwtAuthenticationFilter implements WebFilter {
                 jwtProvider.getAuthorities(claims)
         );
 
-        return chain.filter(exchange)
+        System.out.println("AUTH: " + auth);
+
+        return chain.filter(newExchange)
                 .contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
     }
 }

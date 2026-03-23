@@ -1,0 +1,18 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/mydb
+    username: postgres
+    password: 1234
+
+  flyway:
+    url: jdbc:postgresql://localhost:5432/mydb
+    user: postgres
+    password: 1234
+    enabled: true
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE

@@ -31,7 +31,8 @@ public class SecurityConfig {
                         .pathMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/actuator/**"
                         ).permitAll()
 
                         // everything else
@@ -39,7 +40,7 @@ public class SecurityConfig {
                 )
 
                 // JWT filter
-                .addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .addFilterBefore(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
 
                 .build();
     }

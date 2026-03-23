@@ -1,5 +1,14 @@
 spring:
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/mydb
-    username: postgres
-    password: 1234
+    url: r2dbc:postgresql://postgres:5432/mydb
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  flyway:
+    url: jdbc:postgresql://postgres:5432/mydb
+    user: ${DB_USER}
+    password: ${DB_PASSWORD}
+    enabled: true
+
+  kafka:
+    bootstrap-servers: kafka:9092
