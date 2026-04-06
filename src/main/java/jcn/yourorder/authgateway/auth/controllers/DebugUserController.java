@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -43,7 +44,7 @@ public class DebugUserController {
     public Mono<User> me() {
 
         return ReactiveSecurityContextHolder.getContext()
-                .map(ctx -> ctx.getAuthentication().getName())
+                .map(ctx -> Objects.requireNonNull(ctx.getAuthentication()).getName())
                 .flatMap(id -> userRepository.findById(UUID.fromString(id)));
     }
 }

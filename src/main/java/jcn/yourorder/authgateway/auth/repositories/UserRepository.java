@@ -18,8 +18,8 @@ public interface UserRepository extends ReactiveCrudRepository<User, UUID> {
     Mono<Boolean> existsByEmail(String email);
 
     @Query("""
-    SELECT * FROM users 
-    WHERE username = :login 
+    SELECT * FROM users
+    WHERE username = :login
        OR email = :login
     """)
     Mono<User> findByLogin(String login);

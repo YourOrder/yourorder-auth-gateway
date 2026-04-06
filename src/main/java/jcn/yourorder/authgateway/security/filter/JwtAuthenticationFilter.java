@@ -3,6 +3,7 @@ package jcn.yourorder.authgateway.security.filter;
 import io.jsonwebtoken.Claims;
 import jcn.yourorder.authgateway.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +22,7 @@ public class JwtAuthenticationFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange,
-                             WebFilterChain chain) {
+                             @NonNull WebFilterChain chain) {
 
         String authHeader = exchange.getRequest()
                 .getHeaders()
