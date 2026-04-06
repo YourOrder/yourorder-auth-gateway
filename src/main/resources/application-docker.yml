@@ -8,11 +8,14 @@ spring:
     url: jdbc:postgresql://localhost:5432/mydb
     user: postgres
     password: 1234
-    enabled: true
 
   kafka:
     bootstrap-servers: localhost:9092
 
 logging:
   level:
+    root: INFO
+    jcn.yourorder: DEBUG
+    org.springframework.r2dbc: DEBUG
+    io.r2dbc.postgresql: DEBUG
     org.springframework.cloud.gateway: TRACE
