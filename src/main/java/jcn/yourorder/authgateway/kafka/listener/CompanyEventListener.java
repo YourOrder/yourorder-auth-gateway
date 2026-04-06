@@ -1,5 +1,6 @@
 package jcn.yourorder.authgateway.kafka.listener;
 
+import jakarta.annotation.PostConstruct;
 import jcn.yourorder.authgateway.auth.repositories.UserRepository;
 import jcn.yourorder.authgateway.kafka.event.CompanyCreatedEvent;
 import jcn.yourorder.authgateway.kafka.event.CompanyUpdatedEvent;
