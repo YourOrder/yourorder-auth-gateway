@@ -6,10 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.support.converter.StringJacksonJsonMessageConverter;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JacksonJsonDeserializer;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,11 +30,15 @@ public class KafkaConsumerConfig {
         config.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
         config.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JacksonJsonDeserializer.class);
 
-        config.put(JacksonJsonDeserializer.USE_TYPE_INFO_HEADERS, false);
+        config.put(JacksonJsonDeserializer.TRUSTED_PACKAGES, "*");
+
+        config.put(JacksonJsonDeserializer.TYPE_MAPPINGS,
+                "companyCreatedEvent:jcn.yourorder.authgateway.kafka.event.CompanyCreatedEvent," +
+                        "companyUpdatedEvent:jcn.yourorder.authgateway.kafka.event.CompanyUpdatedEvent"
+        );
 
         return new DefaultKafkaConsumerFactory<>(config);
     }
-
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
@@ -45,7 +47,6 @@ public class KafkaConsumerConfig {
                 new ConcurrentKafkaListenerContainerFactory<>();
 
         factory.setConsumerFactory(consumerFactory());
-        factory.setRecordMessageConverter(new StringJacksonJsonMessageConverter());
 
         return factory;
     }
