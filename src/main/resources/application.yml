@@ -1,8 +1,6 @@
 spring:
-  flyway:
-    url: jdbc:postgresql://localhost:5432/mydb
-    user: postgres
-    password: 1234
+  application:
+    name: auth-gateway
 
   cloud:
     gateway:
