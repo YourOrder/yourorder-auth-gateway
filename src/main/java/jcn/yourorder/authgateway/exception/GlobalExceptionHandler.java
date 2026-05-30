@@ -1,8 +1,8 @@
-package jcn.yourorder.authgateway.common.exception;
+package jcn.yourorder.authgateway.exception;
 
-import jcn.yourorder.authgateway.common.exception.exceptions.BadRequestException;
-import jcn.yourorder.authgateway.common.exception.exceptions.ForbiddenException;
-import jcn.yourorder.authgateway.common.exception.exceptions.NotFoundException;
+import jcn.yourorder.authgateway.exception.exceptions.BadRequestException;
+import jcn.yourorder.authgateway.exception.exceptions.ForbiddenException;
+import jcn.yourorder.authgateway.exception.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

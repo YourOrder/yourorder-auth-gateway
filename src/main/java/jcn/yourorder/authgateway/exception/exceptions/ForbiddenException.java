@@ -1,4 +1,4 @@
-package jcn.yourorder.authgateway.common.exception.exceptions;
+package jcn.yourorder.authgateway.exception.exceptions;
 
 public class ForbiddenException extends RuntimeException {
     public ForbiddenException(String message) {

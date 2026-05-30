@@ -1,4 +1,4 @@
-package jcn.yourorder.authgateway.common.exception.exceptions;
+package jcn.yourorder.authgateway.exception.exceptions;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {

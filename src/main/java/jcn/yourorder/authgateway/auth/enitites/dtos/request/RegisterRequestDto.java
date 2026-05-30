@@ -2,6 +2,7 @@ package jcn.yourorder.authgateway.auth.enitites.dtos.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jcn.yourorder.authgateway.auth.enitites.enums.UserRole;
 
 public record RegisterRequestDto(
 
@@ -13,5 +14,7 @@ public record RegisterRequestDto(
         String email,
 
         @NotBlank(message = "Password is required")
-        String password
+        String password,
+
+        UserRole role
 ) {}

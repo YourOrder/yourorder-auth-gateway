@@ -26,7 +26,7 @@ public class SecurityConfig {
                         .pathMatchers("/auth/**").permitAll()
 
                         .pathMatchers("/debug/users/me").authenticated()
-                        .pathMatchers("/debug/**").permitAll()
+                        .pathMatchers("/debug/**").hasRole("ADMIN")
 
                         .pathMatchers(
                                 "/v3/api-docs/**",

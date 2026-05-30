@@ -1,4 +1,4 @@
-package jcn.yourorder.authgateway.common.exception;
+package jcn.yourorder.authgateway.exception;
 
 import java.time.Instant;
 

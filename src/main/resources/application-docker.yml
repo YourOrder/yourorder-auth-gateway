@@ -5,9 +5,12 @@ spring:
     password: 1234
 
   flyway:
+    enabled: true
     url: jdbc:postgresql://localhost:5432/mydb
     user: postgres
     password: 1234
+    locations: classpath:db/migration
+    baseline-on-migrate: true
 
   kafka:
     bootstrap-servers: localhost:9092

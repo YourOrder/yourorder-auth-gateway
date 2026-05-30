@@ -1,6 +1,6 @@
 package jcn.yourorder.authgateway.kafka.listener;
 
-import jakarta.annotation.PostConstruct;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jcn.yourorder.authgateway.auth.repositories.UserRepository;
 import jcn.yourorder.authgateway.kafka.event.CompanyCreatedEvent;
 import jcn.yourorder.authgateway.kafka.event.CompanyUpdatedEvent;
@@ -18,17 +18,20 @@ import java.util.UUID;
 public class CompanyEventListener {
 
     private final UserRepository userRepository;
+    private final ObjectMapper objectMapper;
 
-    @KafkaListener(topics = "company-created", groupId = "auth-service")
-    public void handleCreated(CompanyCreatedEvent event) {
+    @KafkaListener(topics = "company.created", groupId = "auth-service")
+    public void handleCreated(String message) throws Exception {
+        CompanyCreatedEvent event = objectMapper.readValue(message, CompanyCreatedEvent.class);
 
         log.info("📩 CompanyCreated: {}", event);
 
-        updateTenant(event.owner(), event.companyID());
+        updateTenant(event.ownerId(), event.companyId());
     }
 
-    @KafkaListener(topics = "company-updated", groupId = "auth-service")
-    public void handleUpdated(CompanyUpdatedEvent event) {
+    @KafkaListener(topics = "company.updated", groupId = "auth-service")
+    public void handleUpdated(String message) throws Exception {
+        CompanyUpdatedEvent event = objectMapper.readValue(message, CompanyUpdatedEvent.class);
 
         log.info("📩 CompanyUpdated: {}", event);
 

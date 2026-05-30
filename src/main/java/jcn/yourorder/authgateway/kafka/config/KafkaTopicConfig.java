@@ -9,6 +9,11 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic companyCreatedTopic() {
-        return new NewTopic("company-created", 1, (short) 1);
+        return new NewTopic("company.created", 1, (short) 1);
+    }
+
+    @Bean
+    public NewTopic companyUpdatedTopic() {
+        return new NewTopic("company.updated", 1, (short) 1);
     }
 }

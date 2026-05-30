@@ -37,7 +37,7 @@ public class UserService {
                 .doOnSuccess(v -> log.debug("UNIQUE CHECK PASSED"))
                 .then(hashPassword(rawPassword))
                 .doOnNext(encoded -> log.debug("PASSWORD HASHED: {}", encoded))
-                .flatMap(encoded -> saveUser(username, email, encoded))
+                .flatMap(encoded -> saveUser(username, email, encoded, request.role()))
                 .doOnNext(user -> log.debug("USER SAVED: {}", user))
                 .doOnError(err -> log.error("REGISTER ERROR", err));
     }
@@ -116,13 +116,13 @@ public class UserService {
                 .doOnError(err -> log.error("ERROR HASHING PASSWORD", err));
     }
 
-    private Mono<User> saveUser(String username, String email, String encodedPassword) {
+    private Mono<User> saveUser(String username, String email, String encodedPassword, UserRole role) {
 
         User user = User.builder()
                 .username(username)
                 .email(email)
                 .password(encodedPassword)
-                .role(UserRole.RETAILER)
+                .role(role == null ? UserRole.RETAILER : role)
                 .createdAt(Instant.now())
                 .build();
 

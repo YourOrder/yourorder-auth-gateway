@@ -7,10 +7,14 @@ spring:
       server:
         webflux:
           routes:
-            - id: core-service
+            - id: customer-service
+              uri: http://localhost:8082
+              predicates:
+                - Path=/customer/**
+            - id: seller-service
               uri: http://localhost:8081
               predicates:
-                - Path=/core/**
+                - Path=/api/seller/**
   profiles:
     active: docker
 
