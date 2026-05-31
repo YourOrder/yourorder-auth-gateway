@@ -27,6 +27,7 @@ public class SecurityConfig {
 
                         .pathMatchers("/debug/users/me").authenticated()
                         .pathMatchers("/debug/**").hasRole("ADMIN")
+                        .pathMatchers("/payments/**").hasRole("ADMIN")
 
                         .pathMatchers(
                                 "/v3/api-docs/**",

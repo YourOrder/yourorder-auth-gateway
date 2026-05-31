@@ -3,6 +3,7 @@ package jcn.yourorder.authgateway.auth.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jcn.yourorder.authgateway.auth.enitites.dtos.request.AdminUpdateUserRequest;
 import jcn.yourorder.authgateway.auth.enitites.models.User;
 import jcn.yourorder.authgateway.auth.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +27,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/debug/users")
 @RequiredArgsConstructor
-@Profile({"dev", "docker"})
+@Profile({"dev", "docker", "prod"})
 @Tag(name = "Debug users", description = "Debug-only user inspection endpoints")
 public class DebugUserController {
 
@@ -56,5 +61,34 @@ public class DebugUserController {
         return ReactiveSecurityContextHolder.getContext()
                 .map(ctx -> Objects.requireNonNull(ctx.getAuthentication()).getName())
                 .flatMap(id -> userRepository.findById(UUID.fromString(id)));
+    }
+
+    @PatchMapping("/{id}")
+    public Mono<User> updateUser(
+            @PathVariable UUID id,
+            @RequestBody AdminUpdateUserRequest request
+    ) {
+        return userRepository.findById(id)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("User not found")))
+                .flatMap(user -> {
+                    if (request.username() != null && !request.username().isBlank()) {
+                        user.setUsername(request.username());
+                    }
+                    if (request.email() != null && !request.email().isBlank()) {
+                        user.setEmail(request.email());
+                    }
+                    if (request.tenantId() != null) {
+                        user.setTenantID(request.tenantId());
+                    }
+                    if (request.role() != null) {
+                        user.setRole(request.role());
+                    }
+                    return userRepository.save(user);
+                });
+    }
+
+    @DeleteMapping("/{id}")
+    public Mono<Void> deleteUser(@PathVariable UUID id) {
+        return userRepository.deleteById(id);
     }
 }
